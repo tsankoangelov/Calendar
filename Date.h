@@ -24,14 +24,14 @@ public:
 	unsigned int getHour() const { return this->hour; }
 	unsigned int getMinute() const { return this->minute; }
 
-    bool isValid(const unsigned int, const unsigned int, const unsigned int, const unsigned int, const unsigned int);
+        bool isValid(const unsigned int, const unsigned int, const unsigned int, const unsigned int, const unsigned int);
 
-	bool operator==(const Date&);
+        bool operator==(const Date&);
 	bool operator>(const Date&);
 	bool operator<(const Date&);
 	
 	friend std::ostream& operator<<(std::ostream&,const Date&);
-    friend std::istream& operator>>(std::istream&, Date&);
+        friend std::istream& operator>>(std::istream&, Date&);
 
 
 };
