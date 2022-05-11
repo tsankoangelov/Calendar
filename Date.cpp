@@ -2,83 +2,67 @@
 
 Date::Date() : year(2000), month(1), day(1), hour(0), minute(0) {}
 
-Date::Date(const unsigned int _minute, const unsigned int _hour, const unsigned int _day, const unsigned int _month, const unsigned int _year)
+Date::Date(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute)
 {
-    setMinute(_minute);
-    setHour(_hour);
-    setMonth(_month);
-    setYear(_year);
-    setDay(_day);
+    if(isValid(_year, _month, _day, _hour, _minute))
+    {
+        setYear(_year);
+        setMonth(_month);
+        setDay(_day);
+        setHour(_hour);
+        setMinute(_minute);
+    }
+    else
+    {
+        std::cout << "Wrong date! Try again!" << std::endl;
+    }
 }
 
 void Date::setYear(const unsigned int _year)
 {
-    if (_year < 2000 || _year > 9999) 
-    {
-        std::cout << "Wrong year! Try again..." << std::endl;
-        return;
-    }
-
-    if (check(day, month, _year))
-    {
-        year = _year;
-    }
-
+    year = _year;
+    
 }
 
 void Date::setMonth(const unsigned int _month)
 {
-    if (_month < 1 || _month > 12)
-    {
-        std::cout << "Wrong month! Try again..." << std::endl;
-        return;
-    }
-
-    if (check(day, _month, year))
-    {
-        month = _month;
-    }
-
+    month = _month;
 }
 
 void Date::setDay(const unsigned int _day)
 {
-    if (check(_day, month, year))
-    {
-        day = _day;
-    }
-
+    day = _day;
 }
 
 void Date::setHour(const unsigned int _hour)
 {
-    if (_hour > 23)
-    {
-        std::cout << "Wrong hour! Try again..." << std::endl;
-        return;
-    }
-
     hour = _hour;
 }
 
 void Date::setMinute(const unsigned int _minute)
 {
-    if (_minute > 59)
-    {
-        std::cout << "Wrong minute! Try again..." << std::endl;
-        return;
-    }
-
     minute = _minute;
 }
 
-bool Date::check(const unsigned int _day, const unsigned int _month, const unsigned int _year)
+bool Date::isValid(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute)
 {
+    if (_year < 2000 || _year > 9999)
+    {
+        std::cout << "Wrong date! Try again!" << std::endl;
+        return false;
+    }
+
+    if (_month < 1 || _month > 12)
+    {
+        std::cout << "Wrong date! Try again!" << std::endl;
+        return false;
+    }
+
     if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12)
     {
         if (_day < 1 || _day > 31)
         {
-            std::cout << "Wrong day! Try again..." << std::endl;
+            std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
@@ -86,48 +70,124 @@ bool Date::check(const unsigned int _day, const unsigned int _month, const unsig
     {
         if (_day < 1 || _day > 30)
         {
-            std::cout << "Wrong day! Try again..." << std::endl;
+            std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
     else if (_month == 2)
     {
-        if (_year % 4 == 0)
+        if (((_year % 4 == 0) && (_year % 100 != 0)) || (_year % 400 == 0))
         {
-            if (_year % 100 == 0)
+            if (_day < 1 || _day > 29)
             {
-                if (_year % 400 == 0)
-                {
-                    if (_day < 1 || _day > 29)
-                    {
-                        std::cout << "Wrong day! Try again..." << std::endl;
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (_day < 1 || _day > 28)
-                    {
-                        std::cout << "Wrong day! Try again..." << std::endl;
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                if (_day < 1 || _day > 29)
-                {
-                    std::cout << "Wrong day! Try again..." << std::endl;
-                    return false;
-                }
+                std::cout << "Wrong date! Try again!" << std::endl;
+                return false;
             }
         }
         else
         {
             if (_day < 1 || _day > 28)
             {
-                std::cout << "Wrong day! Try again..." << std::endl;
+                std::cout << "Wrong date! Try again!" << std::endl;
                 return false;
+            }
+        }
+    }
+
+    if (_hour > 23)
+    {
+        std::cout << "Wrong date! Try again!" << std::endl;
+        return false;
+    }
+
+    if (_minute > 59)
+    {
+        std::cout << "Wrong date! Try again!" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool Date::operator==(const Date &d)
+{
+    if ((year == d.year) && (month == d.month) && (day == d.day) && (hour == d.hour) && (minute == d.minute))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool Date::operator>(const Date &d)
+{
+    if (year < d.year)
+    {
+        return false;
+    }
+    if (year == d.year)
+    {
+        if (month < d.month)
+        {
+            return false;
+        }
+        if (month == d.month)
+        {
+            if (day < d.day)
+            {
+                return false;
+            }
+            if (day == d.day)
+            {
+                if (hour < d.hour)
+                {
+                    return false;
+                }
+                if (hour == d.hour)
+                {
+                    if (minute <= d.minute)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool Date::operator<(const Date &d)
+{
+    if (year > d.year)
+    {
+        return false;
+    }
+    if (year == d.year)
+    {
+        if (month > d.month)
+        {
+            return false;
+        }
+        if (month == d.month)
+        {
+            if (day > d.day)
+            {
+                return false;
+            }
+            if (day == d.day)
+            {
+                if (hour > d.hour)
+                {
+                    return false;
+                }
+                if (hour == d.hour)
+                {
+                    if (minute >= d.minute)
+                    {
+                        return false;
+                    }
+                }
             }
         }
     }
@@ -137,37 +197,20 @@ bool Date::check(const unsigned int _day, const unsigned int _month, const unsig
 
 std::istream &operator>>(std::istream &in, Date &d)
 {
-
     do
     {
         std::cout << "Year: ";
         in >> d.year;
-    } while (d.year < 2000 || d.year > 9999);
-
-    do
-    {
         std::cout << "Month: ";
         in >> d.month;
-    } while (d.month < 1 || d.month > 12);
-
-    do
-    {
         std::cout << "Day: ";
         in >> d.day;
-    } while (!d.check(d.day, d.month, d.year));
-
-    do
-    {
         std::cout << "Hour: ";
         in >> d.hour;
-    } while (d.hour > 23);
-
-    do
-    {
         std::cout << "Minute: ";
         in >> d.minute;
-    } while (d.minute > 59);
-
+    } while (!d.isValid(d.year, d.month, d.day, d.hour, d.minute));
+    
     return in;
 }
 
@@ -175,7 +218,7 @@ std::ostream &operator<<(std::ostream &os, const Date &d)
 {
     if (d.day < 10)
     {
-        os << '0' << d.day << '.'; 
+        os << '0' << d.day << '.';
     }
     else
     {
@@ -184,20 +227,18 @@ std::ostream &operator<<(std::ostream &os, const Date &d)
 
     if (d.month < 10)
     {
-        os << '0' << d.month << '.'; 
+        os << '0' << d.month << '.';
     }
     else
     {
         os << d.month << '.';
     }
 
-    
     os << d.year << ' ';
-    
 
     if (d.hour < 10)
     {
-        os << '0' << d.hour << ':'; 
+        os << '0' << d.hour << ':';
     }
     else
     {
