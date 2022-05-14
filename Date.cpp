@@ -4,24 +4,16 @@ Date::Date() : year(2000), month(1), day(1), hour(0), minute(0) {}
 
 Date::Date(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute)
 {
-    if(isValid(_year, _month, _day, _hour, _minute))
-    {
         setYear(_year);
         setMonth(_month);
         setDay(_day);
         setHour(_hour);
         setMinute(_minute);
-    }
-    else
-    {
-        std::cout << "Wrong date! Try again!" << std::endl;
-    }
 }
 
 void Date::setYear(const unsigned int _year)
 {
-    year = _year;
-    
+    year = _year;   
 }
 
 void Date::setMonth(const unsigned int _month)
@@ -44,41 +36,41 @@ void Date::setMinute(const unsigned int _minute)
     minute = _minute;
 }
 
-bool Date::isValid(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute)
+bool Date::isValid()
 {
-    if (_year < 2000 || _year > 9999)
+    if (year < 2000 || year > 9999)
     {
         std::cout << "Wrong date! Try again!" << std::endl;
         return false;
     }
 
-    if (_month < 1 || _month > 12)
+    if (month < 1 || month > 12)
     {
         std::cout << "Wrong date! Try again!" << std::endl;
         return false;
     }
 
-    if (_month == 1 || _month == 3 || _month == 5 || _month == 7 || _month == 8 || _month == 10 || _month == 12)
+    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
     {
-        if (_day < 1 || _day > 31)
+        if (day < 1 || day > 31)
         {
             std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
-    else if (_month == 4 || _month == 6 || _month == 9 || _month == 11)
+    else if (month == 4 || month == 6 || month == 9 || month == 11)
     {
-        if (_day < 1 || _day > 30)
+        if (day < 1 || day > 30)
         {
             std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
-    else if (_month == 2)
+    else if (month == 2)
     {
-        if (((_year % 4 == 0) && (_year % 100 != 0)) || (_year % 400 == 0))
+        if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
         {
-            if (_day < 1 || _day > 29)
+            if (day < 1 || day > 29)
             {
                 std::cout << "Wrong date! Try again!" << std::endl;
                 return false;
@@ -86,7 +78,7 @@ bool Date::isValid(const unsigned int _year, const unsigned int _month, const un
         }
         else
         {
-            if (_day < 1 || _day > 28)
+            if (day < 1 || day > 28)
             {
                 std::cout << "Wrong date! Try again!" << std::endl;
                 return false;
@@ -94,19 +86,29 @@ bool Date::isValid(const unsigned int _year, const unsigned int _month, const un
         }
     }
 
-    if (_hour > 23)
+    if (hour > 23)
     {
         std::cout << "Wrong date! Try again!" << std::endl;
         return false;
     }
 
-    if (_minute > 59)
+    if (minute > 59)
     {
         std::cout << "Wrong date! Try again!" << std::endl;
         return false;
     }
 
     return true;
+}
+
+bool Date::same_day(const Date &d)
+{
+    if ((year == d.year) && (month == d.month) && (day == d.day))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 bool Date::operator==(const Date &d)
@@ -195,6 +197,28 @@ bool Date::operator<(const Date &d)
     return true;
 }
 
+unsigned int Date::operator-(const Date &d)
+{
+    unsigned int difference = 0;
+    if (d.minute > minute)
+    {
+        if (hour == 0)
+        {
+            return 0;
+        }
+        hour--;
+        minute += 60;
+    }
+    difference = minute - d.minute;
+    if (d.hour > hour)
+    {
+        return 0;
+    }
+    difference += (hour - d.hour) * 60;
+
+    return difference;
+}
+
 std::istream &operator>>(std::istream &in, Date &d)
 {
     do
@@ -209,7 +233,7 @@ std::istream &operator>>(std::istream &in, Date &d)
         in >> d.hour;
         std::cout << "Minute: ";
         in >> d.minute;
-    } while (!d.isValid(d.year, d.month, d.day, d.hour, d.minute));
+    } while (!d.isValid());
     
     return in;
 }
@@ -247,12 +271,68 @@ std::ostream &operator<<(std::ostream &os, const Date &d)
 
     if (d.minute < 10)
     {
-        os << '0' << d.minute << std::endl;
+        os << '0' << d.minute << " ";
     }
     else
     {
-        os << d.minute << std::endl;
+        os << d.minute << " ";
     }
 
     return os;
+}
+
+Date& Date::increase() 
+{
+    setMinute(minute + 1);
+	if(minute == 60) 
+	{
+		setMinute(0);
+		setHour(hour + 1);
+		if(hour == 24) 
+		{
+			setHour(0);
+			setDay(day + 1);
+			if(day == 29 && month == 2)
+			{
+				if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {}
+				else 
+				{
+					setDay(1);
+					setMonth(month + 1);
+				}
+			}
+			if(day == 30 && month == 2)
+			{
+				if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0))
+				{
+					setDay(1);
+					setMonth(month + 1);
+				}
+			}
+			if(day == 31)
+			{
+				if ((month == 4) || (month == 6) || (month == 9) || (month == 11)) 
+				{
+					setDay(1);
+					setMonth(month + 1);
+				}
+			}
+			if(day == 32)
+			{
+				if ((month == 1) || (month == 3) || (month == 5) || (month == 7) ||
+					 	(month == 8) || (month == 10) || (month == 12)) 
+				{
+					setDay(1);
+					setMonth(month + 1);
+					if (month == 13) 
+					{
+						setMonth(1);
+						setYear(year + 1);
+					}
+				}
+			} 
+
+		}
+	}
+    return *this;
 }
