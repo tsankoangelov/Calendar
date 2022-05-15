@@ -1,7 +1,20 @@
 #include "Date.h"
 
+/**
+ * @brief Construct a new Date:: Date object
+ * 
+ */
 Date::Date() : year(2000), month(1), day(1), hour(0), minute(0) {}
 
+/**
+ * @brief Construct a new Date:: Date object
+ * 
+ * @param _year 
+ * @param _month 
+ * @param _day 
+ * @param _hour 
+ * @param _minute 
+ */
 Date::Date(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute) : Date()
 {
         setYear(_year);
@@ -11,31 +24,62 @@ Date::Date(const unsigned int _year, const unsigned int _month, const unsigned i
         setMinute(_minute);
 }
 
+/**
+ * @brief Set year
+ * 
+ * @param _year 
+ */
 void Date::setYear(const unsigned int _year)
 {
     year = _year;   
 }
 
+/**
+ * @brief Set month
+ * 
+ * @param _month 
+ */
 void Date::setMonth(const unsigned int _month)
 {
     month = _month;
 }
 
+/**
+ * @brief Set day
+ * 
+ * @param _day 
+ */
 void Date::setDay(const unsigned int _day)
 {
     day = _day;
 }
 
+/**
+ * @brief Set hour
+ * 
+ * @param _hour 
+ */
 void Date::setHour(const unsigned int _hour)
 {
     hour = _hour;
 }
 
+/**
+ * @brief Set minute
+ * 
+ * @param _minute 
+ */
 void Date::setMinute(const unsigned int _minute)
 {
     minute = _minute;
 }
 
+/**
+ * @brief Check if date is valid
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Date::isValid()
 {
     if ((year < 2000 || year > 9999) || (month < 1 || month > 12) || (hour > 23) || (minute > 59))
@@ -78,6 +122,14 @@ bool Date::isValid()
     return true;
 }
 
+
+/**
+ * @brief check if two dates have same year, month and day
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Date::same_day(const Date &d)
 {
     if ((year == d.year) && (month == d.month) && (day == d.day))
@@ -88,6 +140,13 @@ bool Date::same_day(const Date &d)
     return false;
 }
 
+/**
+ * @brief check if two dates are equal
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Date::operator==(const Date &d)
 {
     if ((year == d.year) && (month == d.month) && (day == d.day) && (hour == d.hour) && (minute == d.minute))
@@ -98,6 +157,13 @@ bool Date::operator==(const Date &d)
     return false;
 }
 
+/**
+ * @brief check if date is greater than parameter d
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Date::operator>(const Date &d)
 {
     if (year < d.year)
@@ -136,6 +202,13 @@ bool Date::operator>(const Date &d)
     return true;
 }
 
+/**
+ * @brief check if date is less than parameter d
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Date::operator<(const Date &d)
 {
     if (year > d.year)
@@ -174,6 +247,12 @@ bool Date::operator<(const Date &d)
     return true;
 }
 
+/**
+ * @brief gives difference between two dates in minutes
+ * 
+ * @param d 
+ * @return unsigned int 
+ */
 unsigned int Date::operator-(const Date &d)
 {
     unsigned int difference = 0;
@@ -196,6 +275,13 @@ unsigned int Date::operator-(const Date &d)
     return difference;
 }
 
+/**
+ * @brief Override operator>>
+ * 
+ * @param in 
+ * @param d 
+ * @return std::istream& 
+ */
 std::istream &operator>>(std::istream &in, Date &d)
 {
     do
@@ -211,6 +297,13 @@ std::istream &operator>>(std::istream &in, Date &d)
     return in;
 }
 
+/**
+ * @brief Override operator<<
+ * 
+ * @param os 
+ * @param d 
+ * @return std::ostream& 
+ */
 std::ostream &operator<<(std::ostream &os, const Date &d)
 {
     if (d.day < 10)
@@ -254,6 +347,11 @@ std::ostream &operator<<(std::ostream &os, const Date &d)
     return os;
 }
 
+/**
+ * @brief Return the date increased by 1 minute
+ * 
+ * @return Date& 
+ */
 Date& Date::increase() 
 {
     setMinute(minute + 1);
