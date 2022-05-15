@@ -20,12 +20,12 @@ public:
 	Event& operator=(const Event&);
 	~Event();
 
-	Event(const char*, const char*, const Date&, const Date&);
+	Event(const char*, const char*, Date, Date);
 
 	void setName(const char*);
 	void setComment(const char*);
-	void setBegin(const Date&);
-	void setEnd(const Date&);
+	void setBegin(Date);
+	void setEnd(Date);
 
 	char* getName() const { return this->name; }
 	char* getComment() const { return this->comment; }
@@ -41,5 +41,7 @@ public:
     friend std::istream& operator>>(std::istream&, Event&);
 	friend std::ostream& operator<<(std::ostream&, const Event&);
 };
+
+
 
 #endif
