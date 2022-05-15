@@ -95,7 +95,7 @@ bool Calendar::overlap(Date b, Date e)
 	return false;
 }
 
-bool Calendar::workind_hours(Date d) 
+bool Calendar::working_hours(Date d) 
 {
 	if((d.getHour() >= 8) && (d.getHour() <= 18))
 	{
@@ -111,7 +111,7 @@ bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 	Date temp = d1;
 	while((start_date < d2))
 	{
-		if(free(temp) && (temp < d2) && (start_date.same_day(temp)) && workind_hours(temp) && workind_hours(start_date)) 
+		if(free(temp) && (temp < d2) && (start_date.same_day(temp)) && working_hours(temp) && working_hours(start_date)) 
 		{
 			if(temp_duration > 0)
 			{
@@ -221,8 +221,9 @@ void Calendar::daily(Date& d)
   	else
   	{
    		std::cout << "Wrong date!" << std::endl;
-    	return;
   	}
+
+	delete[] daily;
 }
 
 void Calendar::search(const char* str)
@@ -276,7 +277,7 @@ void Calendar::edit(const char* str, const Date& d)
 
 void Calendar::stat(Date d_begin, Date d_end) 
 {
-	char* filename = new char[20];;
+	char* filename = new char[20];
     std::stringstream tm;
     tm << "stats-";
     tm <<  d_begin.getYear() << '-';
@@ -360,6 +361,7 @@ void Calendar::stat(Date d_begin, Date d_end)
 	file.close();
 	delete[] days; 
 	delete[] day_time;
+	delete[] filename;
 }
 
 void Calendar::export_to_file() 
