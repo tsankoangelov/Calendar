@@ -47,7 +47,7 @@ Event::~Event()
 	clean();
 }
 
-Event::Event(const char *_name, const char *_comment, const Date& b, const Date& e)
+Event::Event(const char* _name, const char* _comment, Date b, Date e) : Event()
 {
 	setName(_name);
 	setComment(_comment);
@@ -69,12 +69,12 @@ void Event::setComment(const char *_comment)
 	strcpy(comment, _comment);
 }
 
-void Event::setBegin(const Date &d)
+void Event::setBegin(Date d)
 {
 	begin = d;
 }
 
-void Event::setEnd(const Date &d)
+void Event::setEnd(Date d)
 {
 	end = d;
 }
@@ -129,6 +129,18 @@ std::istream &operator>>(std::istream &in, Event& e)
 	do
 	{
 		in >> e.begin >> e.end;
+		if (!e.begin.isValid())
+        {
+            std::cout << "Start date of the event is invalid! Try again" << std::endl;
+        }
+		if (!e.end.isValid())
+        {
+            std::cout << "End date of the event is invalid! Try again" << std::endl;
+        }
+		if (!e.check_period())
+        {
+            std::cout << "Invalid period for the event! Period can not be bigger than one day! Check start and end date and try again" << std::endl;
+        }
 	} while (!e.begin.isValid() || !e.end.isValid() || !e.check_period());
 	
 	return in;
@@ -136,8 +148,8 @@ std::istream &operator>>(std::istream &in, Event& e)
 
 std::ostream &operator<<(std::ostream &os,const Event& e)
 {
-	os << e.name << std::endl;
-	os << e.comment << std::endl;
+	os << "Event: " << e.name << std::endl;
+	os << "Comment: " << e.comment << std::endl;
 	os << e.begin << "- " << e.end;
 
 	return os;
