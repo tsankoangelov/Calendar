@@ -18,6 +18,10 @@ void Event::clean()
 	delete[] comment;
 }
 
+/**
+ * @brief Construct a new Event:: Event object
+ * 
+ */
 Event::Event()
 {
 	name = new char[9];
@@ -26,11 +30,22 @@ Event::Event()
 	strcpy(comment, "No comment");
 }
 
+/**
+ * @brief Construct a new Event:: Event object
+ * 
+ * @param other 
+ */
 Event::Event(const Event &other)
 {
 	copy(other);
 }
 
+/**
+ * @brief Override operator=
+ * 
+ * @param other 
+ * @return Event& 
+ */
 Event &Event::operator=(const Event &other)
 {
 	if (this != &other)
@@ -42,11 +57,23 @@ Event &Event::operator=(const Event &other)
 	return *this;
 }
 
+/**
+ * @brief Destroy the Event:: Event object
+ * 
+ */
 Event::~Event()
 {
 	clean();
 }
 
+/**
+ * @brief Construct a new Event:: Event object
+ * 
+ * @param _name 
+ * @param _comment 
+ * @param b 
+ * @param e 
+ */
 Event::Event(const char* _name, const char* _comment, const Date& b, const Date& e) : Event()
 {
 	setName(_name);
@@ -55,6 +82,11 @@ Event::Event(const char* _name, const char* _comment, const Date& b, const Date&
 	setEnd(e);
 }
 
+/**
+ * @brief Set name
+ * 
+ * @param _name 
+ */
 void Event::setName(const char *_name)
 {
 	delete[] name;
@@ -62,6 +94,11 @@ void Event::setName(const char *_name)
 	strcpy(name, _name);
 }
 
+/**
+ * @brief Set comment
+ * 
+ * @param _comment 
+ */
 void Event::setComment(const char *_comment)
 {
 	delete[] comment;
@@ -69,21 +106,44 @@ void Event::setComment(const char *_comment)
 	strcpy(comment, _comment);
 }
 
+/**
+ * @brief Set begin date
+ * 
+ * @param d 
+ */
 void Event::setBegin(const Date& d)
 {
 	begin = d;
 }
 
+/**
+ * @brief Set end date
+ * 
+ * @param d 
+ */
 void Event::setEnd(const Date& d)
 {
 	end = d;
 }
 
+/**
+ * @brief check if two events are equal
+ * 
+ * @param a 
+ * @return true 
+ * @return false 
+ */
 bool Event::operator==(const Event &a)
 {
 	return begin == a.begin && end == a.end && strcmp(name, a.name) == 0 && strcmp(comment, a.comment) == 0;
 }
 
+/**
+ * @brief check if the period for the event is valid
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Event::check_period()
 {
 	if ((end < begin) || (end - begin > 1440) || (!begin.same_day(end)))
@@ -94,6 +154,13 @@ bool Event::check_period()
 	return true;
 }
 
+/**
+ * @brief check if the event start after Event e
+ * 
+ * @param e 
+ * @return true 
+ * @return false 
+ */
 bool Event::operator>(const Event &e)
 {
 	if(begin < e.begin)
@@ -104,6 +171,13 @@ bool Event::operator>(const Event &e)
 	return true;
 }
 
+/**
+ * @brief check if the event start before Event e
+ * 
+ * @param e 
+ * @return true 
+ * @return false 
+ */
 bool Event::operator<(const Event &e)
 {
 	if(begin > e.begin)
@@ -114,6 +188,13 @@ bool Event::operator<(const Event &e)
 	return true;
 }
 
+/**
+ * @brief Override operator>>
+ * 
+ * @param in 
+ * @param e 
+ * @return std::istream& 
+ */
 std::istream &operator>>(std::istream &in, Event& e)
 {
 	do
@@ -146,6 +227,13 @@ std::istream &operator>>(std::istream &in, Event& e)
 	return in;
 }
 
+/**
+ * @brief Override operator<<
+ * 
+ * @param os 
+ * @param e 
+ * @return std::ostream& 
+ */
 std::ostream &operator<<(std::ostream &os,const Event& e)
 {
 	os << "Event: " << e.name << std::endl;
