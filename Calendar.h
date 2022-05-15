@@ -1,6 +1,17 @@
 #ifndef __Calendar_HPP
 #define __Calendar_HPP
 
+/**
+ * @file Calendar.h
+ * @author Tsanko Angelov
+ * @brief Class Calendar implements personal calendar
+ * @version 0.1
+ * @date 2022-05-15
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "Event.h"
 
 class Calendar
