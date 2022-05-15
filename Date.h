@@ -1,6 +1,17 @@
 #ifndef __Date_HPP
 #define __Date_HPP
 
+/**
+ * @file Date.h
+ * @author Tsanko Angelov
+ * @brief Class Date implements date
+ * @version 0.1
+ * @date 2022-05-15
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include<iostream>
 
 class Date
@@ -24,7 +35,7 @@ public:
 	unsigned int getHour() const { return this->hour; }
 	unsigned int getMinute() const { return this->minute; }
 
-        bool isValid();
+    	bool isValid();
 	bool same_day(const Date&);
 	Date& increase();
 
@@ -34,7 +45,7 @@ public:
 	unsigned int operator-(const Date&);
 	 
 	friend std::ostream& operator<<(std::ostream&,const Date&);
-        friend std::istream& operator>>(std::istream&, Date&);
+    	friend std::istream& operator>>(std::istream&, Date&);
 
 
 };
