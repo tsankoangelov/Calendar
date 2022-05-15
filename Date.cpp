@@ -2,7 +2,7 @@
 
 Date::Date() : year(2000), month(1), day(1), hour(0), minute(0) {}
 
-Date::Date(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute)
+Date::Date(const unsigned int _year, const unsigned int _month, const unsigned int _day, const unsigned int _hour, const unsigned int _minute) : Date()
 {
         setYear(_year);
         setMonth(_month);
@@ -38,15 +38,8 @@ void Date::setMinute(const unsigned int _minute)
 
 bool Date::isValid()
 {
-    if (year < 2000 || year > 9999)
+    if ((year < 2000 || year > 9999) || (month < 1 || month > 12) || (hour > 23) || (minute > 59))
     {
-        std::cout << "Wrong date! Try again!" << std::endl;
-        return false;
-    }
-
-    if (month < 1 || month > 12)
-    {
-        std::cout << "Wrong date! Try again!" << std::endl;
         return false;
     }
 
@@ -54,7 +47,6 @@ bool Date::isValid()
     {
         if (day < 1 || day > 31)
         {
-            std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
@@ -62,7 +54,6 @@ bool Date::isValid()
     {
         if (day < 1 || day > 30)
         {
-            std::cout << "Wrong date! Try again!" << std::endl;
             return false;
         }
     }
@@ -72,7 +63,6 @@ bool Date::isValid()
         {
             if (day < 1 || day > 29)
             {
-                std::cout << "Wrong date! Try again!" << std::endl;
                 return false;
             }
         }
@@ -80,22 +70,9 @@ bool Date::isValid()
         {
             if (day < 1 || day > 28)
             {
-                std::cout << "Wrong date! Try again!" << std::endl;
                 return false;
             }
         }
-    }
-
-    if (hour > 23)
-    {
-        std::cout << "Wrong date! Try again!" << std::endl;
-        return false;
-    }
-
-    if (minute > 59)
-    {
-        std::cout << "Wrong date! Try again!" << std::endl;
-        return false;
     }
 
     return true;
@@ -223,16 +200,12 @@ std::istream &operator>>(std::istream &in, Date &d)
 {
     do
     {
-        std::cout << "Year: ";
-        in >> d.year;
-        std::cout << "Month: ";
-        in >> d.month;
-        std::cout << "Day: ";
-        in >> d.day;
-        std::cout << "Hour: ";
-        in >> d.hour;
-        std::cout << "Minute: ";
-        in >> d.minute;
+        std::cout << "Enter date (format: year month day hour minutes): ";
+        in >> d.year >> d.month >> d.day >> d.hour >> d.minute;
+        if (!d.isValid())
+        {
+            std::cout << "Invalid date! Try again" << std::endl;
+        }
     } while (!d.isValid());
     
     return in;
@@ -336,3 +309,4 @@ Date& Date::increase()
 	}
     return *this;
 }
+
