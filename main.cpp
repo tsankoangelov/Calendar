@@ -3,7 +3,12 @@
 
 #include "Calendar.h"
 
-void CommandPromt()
+/**
+ * @brief Interactive menu
+ * 
+ */
+
+void CommandPrompt()
 {
     Calendar cal;
     char word[100];
@@ -106,7 +111,7 @@ void CommandPromt()
 
 int main()
 {
-    CommandPromt();
+    CommandPrompt();
 
     return 0;
 }
