@@ -38,7 +38,7 @@ public:
 	bool operator>(const Event&);
 	bool operator<(const Event&);
 
-    friend std::istream& operator>>(std::istream&, Event&);
+        friend std::istream& operator>>(std::istream&, Event&);
 	friend std::ostream& operator<<(std::ostream&, const Event&);
 };
 
