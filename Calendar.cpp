@@ -35,16 +35,31 @@ void Calendar::resize()
 	events = temp;
 }
 
+/**
+ * @brief Construct a new Calendar:: Calendar object
+ * 
+ */
 Calendar::Calendar() : capacity(10), size(0)
 {
 	events = new Event[capacity];
 }
 
+/**
+ * @brief Construct a new Calendar:: Calendar object
+ * 
+ * @param other 
+ */
 Calendar::Calendar(const Calendar& other)
 {
 	copy(other);
 }
 
+/**
+ * @brief Override operator=
+ * 
+ * @param other 
+ * @return Calendar& 
+ */
 Calendar& Calendar::operator=(const Calendar& other)
 {
 	if (this != &other)
@@ -56,11 +71,22 @@ Calendar& Calendar::operator=(const Calendar& other)
 	return *this;
 }
 
+/**
+ * @brief Destroy the Calendar:: Calendar object
+ * 
+ */
 Calendar::~Calendar()
 {
 	clean();
 }
 
+/**
+ * @brief check if date and time is free
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Calendar::free(Date& d)  
 {
 	for (int i = 0; i < size; i++)
@@ -77,6 +103,14 @@ bool Calendar::free(Date& d)
 	return true;
 }
 
+/**
+ * @brief check if the slot between Date b and Date e is not free
+ * 
+ * @param b 
+ * @param e 
+ * @return true 
+ * @return false 
+ */
 bool Calendar::overlap(Date b, Date e)  
 {
 	int duration = e - b;
@@ -95,6 +129,13 @@ bool Calendar::overlap(Date b, Date e)
 	return false;
 }
 
+/**
+ * @brief check if date and time is during working hours
+ * 
+ * @param d 
+ * @return true 
+ * @return false 
+ */
 bool Calendar::working_hours(Date d) 
 {
 	if((d.getHour() >= 8) && (d.getHour() <= 18))
@@ -104,6 +145,15 @@ bool Calendar::working_hours(Date d)
 	return false;
 }
 
+/**
+ * @brief check if there is free slot with given duration between Date d1 and Date d2 during working hours
+ * 
+ * @param d1 
+ * @param d2 
+ * @param duration 
+ * @return true 
+ * @return false 
+ */
 bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 {
 	int temp_duration = duration;
@@ -135,6 +185,11 @@ bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 	return false;
 }
 
+/**
+ * @brief Add new Event
+ * 
+ * @param e 
+ */
 void Calendar::add(Event& e)
 {
 	if (size == capacity)
@@ -154,6 +209,12 @@ void Calendar::add(Event& e)
 	
 }
 
+/**
+ * @brief Remove Event if such event exists
+ * 
+ * @param str 
+ * @param d 
+ */
 void Calendar::remove(const char* str, const Date& d)
 {
 	if (size == 0)
@@ -162,7 +223,7 @@ void Calendar::remove(const char* str, const Date& d)
 		return;
 	}
 	for (int i = 0; i < size; i++) 
-    {
+	{
 		char* output = nullptr;
 		output = strstr(events[i].getName(), str);
 		if ((output) && (events[i].getBegin() == d))
@@ -180,24 +241,29 @@ void Calendar::remove(const char* str, const Date& d)
 	return;
 }
 
+/**
+ * @brief Print all events scheduled for Date d sorted by time
+ * 
+ * @param d 
+ */
 void Calendar::daily(Date& d)
 {
   	int daily_tasks = 0;
   	Event* daily = new Event[size];
   	if (d.isValid() == true) 
   	{
-    	for (int i = 0; i < size; i++) 
-    	{
+		for (int i = 0; i < size; i++) 
+		{
 			if (events[i].getBegin().same_day(d))
 			{  
 				daily[daily_tasks] = events[i];
 				daily_tasks++;
 			}
-    	}
-    	if (daily_tasks == 0) 
+		}
+		if (daily_tasks == 0) 
 		{
-      		std::cout << "No tasks for this date!" << std::endl;
-    	}
+			std::cout << "No tasks for this date!" << std::endl;
+		}
 		else 
 		{
 			for (int i = 0; i < daily_tasks; i++) 
@@ -211,7 +277,7 @@ void Calendar::daily(Date& d)
 						daily[j + 1] = temp;
 					}
 				}
-    		}
+			}
 			for (int i = 0; i < daily_tasks; i++) 
 			{
 				std::cout << daily[i] << std::endl;
@@ -226,10 +292,15 @@ void Calendar::daily(Date& d)
 	delete[] daily;
 }
 
+/**
+ * @brief Search for event by given substring of the event`s name or comment
+ * 
+ * @param str 
+ */
 void Calendar::search(const char* str)
 {
 	for (int i = 0; i < size; i++) 
-    {
+	{
 		char* output = nullptr;
 		output = strstr(events[i].getName(), str);
 		if(output) 
@@ -247,10 +318,16 @@ void Calendar::search(const char* str)
 	}
 }
 
+/**
+ * @brief Edit Event if such event exists
+ * 
+ * @param str 
+ * @param d 
+ */
 void Calendar::edit(const char* str, const Date& d)
 {
 	for (int i = 0; i < size; i++) 
-    {
+	{
 		char* output = nullptr;
 		output = strstr(events[i].getName(), str);
 		if ((output) && (events[i].getBegin() == d))
@@ -275,31 +352,37 @@ void Calendar::edit(const char* str, const Date& d)
 	return;
 }
 
+/**
+ * @brief Export statistic in a file for given period. In the file the dates are sorted by business.
+ * 
+ * @param d_begin 
+ * @param d_end 
+ */
 void Calendar::stat(Date d_begin, Date d_end) 
 {
 	char* filename = new char[20];
-    std::stringstream tm;
-    tm << "stats-";
-    tm <<  d_begin.getYear() << '-';
-    if (d_begin.getMonth() < 10)
-    {
-        tm << '0' << d_begin.getMonth() << '-';
-    }
-    else
-    {
-        tm <<  d_begin.getMonth() << '-';
-    }
-    if (d_begin.getDay() < 10)
-    {
-        tm << '0' << d_begin.getDay() << ".txt";
-    }
-    else
-    {
-        tm <<  d_begin.getDay() << ".txt";
-    }
+	std::stringstream tm;
+	tm << "stats-";
+	tm <<  d_begin.getYear() << '-';
+	if (d_begin.getMonth() < 10)
+	{
+		tm << '0' << d_begin.getMonth() << '-';
+	}
+	else
+	{
+		tm <<  d_begin.getMonth() << '-';
+	}
+	if (d_begin.getDay() < 10)
+	{
+		tm << '0' << d_begin.getDay() << ".txt";
+	}
+	else
+	{
+		tm <<  d_begin.getDay() << ".txt";
+	}
 
-    strcpy(filename, tm.str().c_str());
-    std::ofstream file(filename);
+	strcpy(filename, tm.str().c_str());
+	std::ofstream file(filename);
 	if (!file.is_open())
 	{
 		std::cout << "Could not open file" << std::endl;
@@ -341,8 +424,10 @@ void Calendar::stat(Date d_begin, Date d_end)
 	}
 	for (int i = 0; i < index; i++) 
 	{
-		for (int j = 0; j < index - i - 1; j++) {
-			if (day_time[j] < day_time[j + 1]) {
+		for (int j = 0; j < index - i - 1; j++) 
+		{
+			if (day_time[j] < day_time[j + 1]) 
+			{
 				int temp_int = day_time[j];
 				day_time[j] = day_time[j+1];
 				day_time[j+1] = temp_int;
@@ -351,7 +436,7 @@ void Calendar::stat(Date d_begin, Date d_end)
 				days[j + 1] = temp;
 			}
 		}
-    }
+    	}
 	for (int i = 0; i < index; i++) 
 	{
 		file << days[i].getDay() << "." << days[i].getMonth() << "." << days[i].getYear();
@@ -364,6 +449,10 @@ void Calendar::stat(Date d_begin, Date d_end)
 	delete[] filename;
 }
 
+/**
+ * @brief Export all the events to text file sorted by begin date.
+ * 
+ */
 void Calendar::export_to_file() 
 {
 	std::ofstream file("my_calendar.txt");
@@ -392,6 +481,13 @@ void Calendar::export_to_file()
 	file.close();
 }
 
+/**
+ * @brief Override operator<<
+ * 
+ * @param os 
+ * @param c 
+ * @return std::ostream& 
+ */
 std::ostream& operator<<(std::ostream& os, const Calendar& c)
 {
 	for (int i = 0; i < c.size; i++)
