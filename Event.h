@@ -1,6 +1,17 @@
 #ifndef __Event_HPP
 #define __Event_HPP
 
+/**
+ * @file Event.h
+ * @author Tsanko Angelov
+ * @brief Class Event implements event with name, comment, begin Date and end Date
+ * @version 0.1
+ * @date 2022-05-15
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "Date.h"
 
 class Event
@@ -38,7 +49,7 @@ public:
 	bool operator>(const Event&);
 	bool operator<(const Event&);
 
-        friend std::istream& operator>>(std::istream&, Event&);
+    	friend std::istream& operator>>(std::istream&, Event&);
 	friend std::ostream& operator<<(std::ostream&, const Event&);
 };
 
