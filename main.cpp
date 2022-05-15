@@ -65,7 +65,7 @@ void CommandPromt()
         else if (strcmp(word, "SEARCH") == 0)
         {
             std::cout << "Search event by name or comment" << std::endl;
-            char* s = new char[100];
+            char s[100];
             std::cin.getline(s, 100);
             cal.search(s);
             std::cin.ignore();
