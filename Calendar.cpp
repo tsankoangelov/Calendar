@@ -32,12 +32,7 @@ void Calendar::resize()
 		temp[i] = events[i];
 	}
 	delete[] events;
-	Event* events = new Event[capacity];
-	for (int i = 0; i < capacity; i++) 
-	{
-		events[i] = temp[i];
-	}
-	delete[] temp;
+	events = temp;
 }
 
 Calendar::Calendar() : capacity(10), size(0)
@@ -100,6 +95,15 @@ bool Calendar::overlap(Date b, Date e)
 	return false;
 }
 
+bool Calendar::workind_hours(Date d) 
+{
+	if((d.getHour() >= 8) && (d.getHour() <= 18))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 {
 	int temp_duration = duration;
@@ -107,7 +111,7 @@ bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 	Date temp = d1;
 	while((start_date < d2))
 	{
-		if(free(temp) && (temp < d2) && (start_date.same_day(temp))) 
+		if(free(temp) && (temp < d2) && (start_date.same_day(temp)) && workind_hours(temp) && workind_hours(start_date)) 
 		{
 			if(temp_duration > 0)
 			{
@@ -118,10 +122,9 @@ bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 			{
 				std::cout << start_date << std::endl;
 				return true;
-			}
-			
+			}	
 		}
-		else 
+		else
 		{
 			temp = start_date.increase();
 			temp_duration = duration;
@@ -131,7 +134,6 @@ bool Calendar::free_slot(Date& d1, Date& d2, int duration)
 	std::cout << "No free time for this period." << std::endl;
 	return false;
 }
-
 
 void Calendar::add(Event& e)
 {
@@ -152,29 +154,28 @@ void Calendar::add(Event& e)
 	
 }
 
-void Calendar::remove(Event& e)
+void Calendar::remove(const char* str, const Date& d)
 {
 	if (size == 0)
 	{
 		std::cout << "There are no events in your calendar!" << std::endl;
 		return;
 	}
-
-	for (int i = 0; i < size; i++)
-	{
-		if (events[i] == e)
+	for (int i = 0; i < size; i++) 
+    {
+		char* output = nullptr;
+		output = strstr(events[i].getName(), str);
+		if ((output) && (events[i].getBegin() == d))
 		{
 			for (int j = i; j < size - 1; j++)
 			{
 				events[j] = events[j + 1];
 			}
-
 			size--;
 			std::cout << "Event removed successfully!" << std::endl;
 			return;
 		}
 	}
-
 	std::cout << "Event not found!" << std::endl;
 	return;
 }
@@ -245,12 +246,15 @@ void Calendar::search(const char* str)
 	}
 }
 
-void Calendar::edit(Event& e)
+void Calendar::edit(const char* str, const Date& d)
 {
 	for (int i = 0; i < size; i++) 
     {
-		if(events[i] == e) 
+		char* output = nullptr;
+		output = strstr(events[i].getName(), str);
+		if ((output) && (events[i].getBegin() == d))
 		{
+			events[i] = Event();
 			Event new_event;
 			do
 			{
@@ -263,8 +267,11 @@ void Calendar::edit(Event& e)
 
 			events[i] = new_event;
 			std::cout << "Event edited successfully!" << std::endl;
+			return;
 		}
 	}
+	std::cout << "Event not found!" << std::endl;
+	return;
 }
 
 void Calendar::stat(Date d_begin, Date d_end) 
@@ -301,6 +308,10 @@ void Calendar::stat(Date d_begin, Date d_end)
 	Date* days = new Date[size];
 	int index = 0;
 	int* day_time = new int[size];
+	for (int i = 0; i < size; i++)
+	{
+		day_time[i] = 0;
+	}
 	Date current_day;
 	for (int i = 0 ; i < size; i++) 
 	{
@@ -313,14 +324,16 @@ void Calendar::stat(Date d_begin, Date d_end)
 				if ((days[j].getYear() == current_day.getYear()) && (days[j].getMonth() == current_day.getMonth()) && (days[j].getDay() == current_day.getDay()))
 				{
 					exist = true;
-					day_time[j] += (events[i].getEnd() - events[i].getBegin());
+					int sum = (events[i].getEnd() - events[i].getBegin());
+					day_time[j] += sum;
 					break;
 				}
 			}
 			if (!exist) 
 			{
 				days[index] = current_day;
-				day_time[index] += (events[i].getEnd() - events[i].getBegin());
+				int sum = (events[i].getEnd() - events[i].getBegin());
+				day_time[index] += sum;
 				index++;
 			}
 		}
@@ -342,12 +355,39 @@ void Calendar::stat(Date d_begin, Date d_end)
 	{
 		file << days[i].getDay() << "." << days[i].getMonth() << "." << days[i].getYear();
 		file << " Busy time: " << day_time[i];
-		
 		file << std::endl;
 	}
 	file.close();
 	delete[] days; 
 	delete[] day_time;
+}
+
+void Calendar::export_to_file() 
+{
+	std::ofstream file("my_calendar.txt");
+	if (!file.is_open())
+	{
+		std::cout << "Could not open file" << std::endl;
+		return;
+	}
+	for (int i = 0; i < size; i++) 
+	{
+		for (int j = 0; j < size - i - 1; j++) 
+		{
+			if (events[j] > events[j + 1]) 
+			{
+				Event temp = events[j];
+				events[j] = events[j + 1];
+				events[j + 1] = temp;
+			}
+		}
+    }
+	for (int i = 0; i < size; i++) 
+	{
+		file << events[i] << std::endl;
+		file << std::endl;
+	}
+	file.close();
 }
 
 std::ostream& operator<<(std::ostream& os, const Calendar& c)
