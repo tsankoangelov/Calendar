@@ -20,12 +20,12 @@ public:
 	Event& operator=(const Event&);
 	~Event();
 
-	Event(const char*, const char*, Date, Date);
+	Event(const char*, const char*, const Date&, const Date&);
 
 	void setName(const char*);
 	void setComment(const char*);
-	void setBegin(Date);
-	void setEnd(Date);
+	void setBegin(const Date&);
+	void setEnd(const Date&);
 
 	char* getName() const { return this->name; }
 	char* getComment() const { return this->comment; }
