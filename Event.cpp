@@ -47,7 +47,7 @@ Event::~Event()
 	clean();
 }
 
-Event::Event(const char* _name, const char* _comment, Date b, Date e) : Event()
+Event::Event(const char* _name, const char* _comment, const Date& b, const Date& e) : Event()
 {
 	setName(_name);
 	setComment(_comment);
@@ -69,12 +69,12 @@ void Event::setComment(const char *_comment)
 	strcpy(comment, _comment);
 }
 
-void Event::setBegin(Date d)
+void Event::setBegin(const Date& d)
 {
 	begin = d;
 }
 
-void Event::setEnd(Date d)
+void Event::setEnd(const Date& d)
 {
 	end = d;
 }
