@@ -25,14 +25,16 @@ public:
 	int getSize() const { return this->size; }
 
 	void add(Event&);
-	void remove(Event&);
+	void remove(const char* str, const Date& d);
 	void daily(Date&);
 	void search(const char*);
-	void edit(Event&);
+	void edit(const char* str, const Date& d);
 	void stat(Date, Date);
 	bool free(Date&);
 	bool overlap(Date, Date);
+	bool workind_hours(Date); 
 	bool free_slot(Date&, Date&, int);
+	void export_to_file();
 
 
 	friend std::ostream& operator<<(std::ostream&, const Calendar&);
