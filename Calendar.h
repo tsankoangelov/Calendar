@@ -32,7 +32,7 @@ public:
 	void stat(Date, Date);
 	bool free(Date&);
 	bool overlap(Date, Date);
-	bool workind_hours(Date); 
+	bool working_hours(Date); 
 	bool free_slot(Date&, Date&, int);
 	void export_to_file();
 
